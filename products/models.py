@@ -9,5 +9,7 @@ class Product(models.Model):
 
 
 class Image(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='image', on_delete=models.CASCADE)
     photo = models.ImageField()
+
+

@@ -1,13 +1,7 @@
-from django.http import Http404
-
+from . import serializers
 from .models import Product, Image
 from rest_framework import viewsets
-from .serializers import ProductSerializer, ImageSerializer
-
-
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+from .serializers import ImageSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -15,10 +9,12 @@ class ImageViewSet(viewsets.ModelViewSet):
     serializer_class = ImageSerializer
 
 
-# def detail(request, product_id):
-#     try:
-#         p = Product.objects.get(id=product_id)
-#     except:
-#         raise Http404("No found")
-#
-#     photos = p.images_set.orderby('-id')
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.ProductImgSerializer
+        if self.action == 'retrieve':
+            return serializers.ProductSerializer
+        return serializers.ProductImgSerializer
